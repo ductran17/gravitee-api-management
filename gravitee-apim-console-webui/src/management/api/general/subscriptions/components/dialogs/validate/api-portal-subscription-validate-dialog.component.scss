@@ -1,0 +1,21 @@
+.validate-subscription {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &__row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    &__message {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+.actions {
+  justify-content: flex-end;
+}

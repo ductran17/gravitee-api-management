@@ -1,0 +1,16 @@
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+.step-2-entrypoints-2-config {
+  &__listeners-context__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+}
+
+gio-form-qos {
+  display: block;
+  margin-top: 8px;
+}

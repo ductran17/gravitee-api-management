@@ -1,0 +1,60 @@
+{
+  "id": "mqtt5-endpoint-qos-auto",
+  "name": "my-api",
+  "apiVersion": "1.0",
+  "definitionVersion": "4.0.0",
+  "type": "message",
+  "description": "api v4 using HTTP Get entrypoint",
+  "listeners": [
+    {
+      "type": "http",
+      "paths": [
+        {
+          "path": "/test-publish"
+        }
+      ],
+      "entrypoints": [
+        {
+          "type": "websocket",
+          "qos": "auto",
+          "configuration": {
+            "publisher": {
+              "enabled": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "endpointGroups": [
+    {
+      "name": "default-group",
+      "type": "mqtt5",
+      "endpoints": [
+        {
+          "name": "default",
+          "type": "mqtt5",
+          "weight": 1,
+          "inheritConfiguration": false,
+          "configuration": {
+            "serverHost": "localhost",
+            "serverPort": "mqtt5-port"
+          },
+          "sharedConfigurationOverride": {
+            "consumer": {
+              "enabled": false
+            },
+            "producer": {
+              "enabled": true,
+              "topic": "test-topic-publish"
+            },
+            "sessionExpiryInterval": 3600
+          }
+        }
+      ]
+    }
+  ],
+  "analytics": {
+    "enabled": false
+  }
+}

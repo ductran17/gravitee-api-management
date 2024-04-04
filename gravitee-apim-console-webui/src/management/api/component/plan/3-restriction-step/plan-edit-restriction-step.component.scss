@@ -1,0 +1,21 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+:host {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rateLimit-card,
+.quota-card,
+.resourceFiltering-card {
+  display: flex;
+  flex-direction: column;
+
+  &__schema-form {
+    padding: 8px 0 8px 8px;
+  }
+}

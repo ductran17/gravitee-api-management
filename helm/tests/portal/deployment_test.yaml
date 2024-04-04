@@ -1,0 +1,153 @@
+suite: Test portal deployment
+templates:
+  - "portal/portal-deployment.yaml"
+  - "portal/portal-configmap.yaml"
+tests:
+  - it: Should generate a PORTAL_BASE_HREF environment variable
+    template: portal/portal-deployment.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: "PORTAL_BASE_HREF"
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: "/"
+
+  - it: Should generate a CONSOLE_BASE_HREF environment variable when modifying ingress path with subpath
+    template: portal/portal-deployment.yaml
+    set:
+      portal:
+        ingress:
+          path: /4pi-test/portal(/.*)?
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: "PORTAL_BASE_HREF"
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: "/4pi-test/portal/"
+
+  - it: Should generate a PORTAL_BASE_HREF environment variable when modifying ingress path
+    template: portal/portal-deployment.yaml
+    set:
+      portal:
+        ingress:
+          path: /test
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: "PORTAL_BASE_HREF"
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: "/test/"
+
+  - it: Should override generated CONSOLE_BASE_HREF environment variable
+    template: portal/portal-deployment.yaml
+    set:
+      portal:
+        env:
+        - name: PORTAL_BASE_HREF
+          value: /test/
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: "PORTAL_BASE_HREF"
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: "/test/"
+
+  - it: Check DB Less mode
+    set:
+      global:
+        kubeVersion: 1.23.0
+      apim:
+        dbLess: true
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Deploy with podSecurityContext
+    template: portal/portal-deployment.yaml
+    set:
+      portal:
+        deployment:
+          podSecurityContext:
+            fsGroup: 1001
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 1001
+
+  - it: Generate the default preStop
+    template: portal/portal-deployment.yaml
+    set:
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.exec.command
+          value: ['sh','-c', 'sleep 5 && /usr/sbin/nginx -s quit']
+
+
+  - it: Override the default preStop
+    template: portal/portal-deployment.yaml
+    set:
+      portal:
+        lifecycle:
+          preStop: "['sh','-c', 'sleep 5 && /usr/sbin/nginx -s override']"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.exec.command
+          value: ['sh','-c', 'sleep 5 && /usr/sbin/nginx -s override']
+
+  - it: Default SecurityContext
+    template: portal/portal-deployment.yaml
+    set:
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsUser
+          value: 101
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true
+
+  - it: Override SecurityContext
+    template: portal/portal-deployment.yaml
+    set:
+      portal:
+        deployment:
+          securityContext:
+            runAsUser: 102
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsUser
+          value: 102
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true

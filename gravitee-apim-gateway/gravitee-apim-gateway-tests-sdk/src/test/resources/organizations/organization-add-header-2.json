@@ -1,0 +1,32 @@
+{
+  "id" : "ORGA-2",
+  "hrids" : [ "orga-2" ],
+  "name" : "Organization 2",
+  "description" : "Organization 2",
+  "flowMode" : "DEFAULT",
+  "flows" : [ {
+    "name" : "",
+    "path-operator" : {
+      "path" : "/",
+      "operator" : "STARTS_WITH"
+    },
+    "condition" : "",
+    "pre" : [ {
+      "name" : "Add Request Header",
+      "description" : "",
+      "enabled" : true,
+      "policy" : "header-policy2",
+      "configuration" : {}
+    } ],
+    "post" : [
+      {
+        "name" : "Add Response Header",
+        "description" : "",
+        "enabled" : true,
+        "policy" : "header-policy2",
+        "configuration" : {}
+      }
+    ],
+    "enabled" : true
+  } ]
+}

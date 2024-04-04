@@ -1,0 +1,10 @@
+@use '../../../scss/gio-layout' as gio-layout;
+
+:host {
+  @include gio-layout.gio-full-width-content-container;
+}
+
+.header__nav__saveButton {
+  margin: 0 24px;
+  align-self: center;
+}

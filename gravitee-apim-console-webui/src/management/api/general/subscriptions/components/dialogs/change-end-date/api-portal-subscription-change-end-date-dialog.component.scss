@@ -1,0 +1,22 @@
+@use 'node_modules/@angular/material/index' as mat;
+@use 'node_modules/@gravitee/ui-particles-angular/index' as gio;
+
+.change-end-date {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__datepicker {
+    width: 100%;
+  }
+
+  &__warning {
+    color: mat.get-color-from-palette(gio.$mat-error-palette, 'default');
+  }
+}
+
+.actions {
+  justify-content: flex-end;
+}

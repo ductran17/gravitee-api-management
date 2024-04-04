@@ -1,0 +1,56 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<mat-selection-list
+  *ngIf="entrypoints.length > 0; else noEntrypoints"
+  class="gio-connector-list"
+  disableRipple="true"
+  [(ngModel)]="entrypointSelection"
+>
+  <mat-list-option
+    *ngFor="let entrypoint of entrypoints"
+    [value]="entrypoint.id"
+    checkboxPosition="before"
+    #listOption
+    [class.gio-connector__selected]="listOption.selected"
+  >
+    <gio-connector-list-option-layout>
+      <gio-connector-list-option-layout-title>
+        <div class="title">
+          <mat-icon class="api-creation-v4__icon" [svgIcon]="entrypoint.icon"></mat-icon>
+          {{ entrypoint.name }}
+          <span class="gio-badge-primary api-creation-v4__badge">New</span>
+          <span class="gio-badge-accent api-creation-v4__badge" *ngIf="entrypoint.isEnterprise">Enterprise</span>
+          <span class="gio-badge-warning api-creation-v4__badge" *ngIf="!entrypoint.deployed">Not deployed</span>
+        </div>
+      </gio-connector-list-option-layout-title>
+
+      <gio-connector-list-option-layout-body>
+        {{ entrypoint.description }}
+      </gio-connector-list-option-layout-body>
+
+      <gio-connector-list-option-layout-action>
+        <button type="button" mat-stroked-button (click)="onMoreInfoClick($event, entrypoint)">
+          <mat-icon svgIcon="gio:eye-empty"></mat-icon>
+          More information
+        </button>
+      </gio-connector-list-option-layout-action>
+    </gio-connector-list-option-layout>
+  </mat-list-option>
+</mat-selection-list>
+
+<ng-template #noEntrypoints> No entrypoints available </ng-template>

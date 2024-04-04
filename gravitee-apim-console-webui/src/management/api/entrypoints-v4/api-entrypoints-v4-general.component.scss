@@ -1,0 +1,56 @@
+@use '../../../scss/gio-layout' as gio-layout;
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+:host {
+  @include gio-layout.gio-responsive-content-container;
+  overflow: visible;
+}
+
+.entrypoints {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__context-path {
+    &__title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+  }
+
+  &__type {
+    margin-top: 24px;
+
+    &__table {
+      width: 100%;
+      margin-top: 16px;
+      margin-bottom: 8px;
+
+      &__type {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      &__actions {
+        display: flex;
+        justify-content: flex-end;
+
+        .mat-icon-button {
+          height: 48px;
+        }
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 24px;
+    gap: 8px;
+  }
+}

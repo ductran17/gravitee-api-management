@@ -1,0 +1,9 @@
+resourcePackages:
+  - io.gravitee.rest.api.management.rest.resource
+cacheTTL: 0
+openAPI:
+  servers:
+    - url: http://localhost:8083/management
+  info:
+    version: '${project.version}'
+    title: Gravitee.io - Management API

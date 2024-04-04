@@ -1,0 +1,9 @@
+.gio-chart-pie {
+  &__chart {
+    display: block;
+  }
+  &__no-data {
+    display: flex;
+    justify-content: center;
+  }
+}

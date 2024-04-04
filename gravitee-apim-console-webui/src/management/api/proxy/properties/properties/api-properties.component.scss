@@ -1,0 +1,43 @@
+@use '../../../../../../node_modules/@angular/material/index' as mat;
+@use '../../../../../../node_modules/@gravitee/ui-particles-angular/index' as gio;
+
+@use '../../../../../scss/gio-layout' as gio-layout;
+
+:host {
+  @include gio-layout.gio-responsive-margin-container;
+}
+
+.apiProperties {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    &__text {
+      padding-right: 48px;
+    }
+    &__btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+  }
+
+  &__table {
+    .mat-column-actions {
+      text-align: end;
+      width: 182px; // two buttons
+    }
+
+    .mat-column-key,
+    .mat-column-value {
+      padding-right: 16px;
+    }
+
+    &__field {
+      width: 100%;
+    }
+  }
+}

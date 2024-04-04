@@ -1,0 +1,158 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<div layout="row" flex class="api-events" style="margin-top: 20px">
+  <div class="api-history-timeline" flex="20">
+    <timeline>
+      <div ng-repeat="eventTimeline in $ctrl.eventsTimeline">
+        <timeline-event side="right">
+          <timeline-badge class="{{eventTimeline.badgeClass}}">
+            <div class="api-history-timeline__timeline-badge-container">
+              <gv-icon ng-prop-shape="eventTimeline.badgeIconClass" class="api-history-timeline__timeline-badge-container__icon"> </gv-icon>
+            </div>
+          </timeline-badge>
+          <a class="timeline-link" ng-click="$ctrl.selectEvent(eventTimeline)">
+            <timeline-panel ng-class="{active : $ctrl.isEventSelected(eventTimeline)}" class="{{eventTimeline.badgeClass}}">
+              <timeline-heading>
+                <div class="api-history-timeline_heading-title">
+                  <h5>
+                    {{eventTimeline.title | uppercase}} {{eventTimeline.deploymentNumber ? '#' + eventTimeline.deploymentNumber : ''}}
+                  </h5>
+                  <gv-icon
+                    class="api-history-icon"
+                    ng-show="$ctrl.eventToCompareRequired && !$ctrl.isEventSelected(eventTimeline)"
+                    shape="design:border"
+                  ></gv-icon>
+                  <gv-icon
+                    class="api-history-icon"
+                    ng-show="$ctrl.isEventSelectedForComparaison(eventTimeline)"
+                    shape="code:git#4"
+                  ></gv-icon>
+                </div>
+                <p ng-if="eventTimeline.deploymentLabel">
+                  <small class="text-muted ng-binding">
+                    <gv-icon shape="action:info" class="api-history-timeline__timeline-small-icon"> </gv-icon>
+                    {{eventTimeline.deploymentLabel}}</small
+                  >
+                </p>
+                <p ng-if="eventTimeline.when">
+                  <small class="text-muted ng-binding">
+                    <gv-icon shape="home:clock" class="api-history-timeline__timeline-small-icon"> </gv-icon>
+                    {{eventTimeline.when | date : 'medium'}} by {{eventTimeline.user.displayName}}
+                  </small>
+                </p>
+                <p ng-if="eventTimeline.isCurrentAPI">
+                  <small class="text-muted ng-binding">
+                    <gv-icon shape="action:info" class="api-history-timeline__timeline-small-icon"> </gv-icon>
+                    In progress API definition</small
+                  >
+                </p>
+              </timeline-heading>
+            </timeline-panel>
+          </a>
+        </timeline-event>
+      </div>
+    </timeline>
+
+    <a ng-if="apiHistoryCtrl.hasNextEventPageToLoad" ng-click="apiHistoryCtrl.appendNextPage()">Load more...</a>
+  </div>
+
+  <div class="api-events-content" flex="80">
+    <div ng-show="$ctrl.eventsSelected.length == 1" class="api-events-content-descriptor">
+      <md-card style="box-shadow: none">
+        <div ng-show="$ctrl.eventsTimeline.length > 1" class="api-event-content_actions">
+          <div>
+            <gv-button
+              permission
+              permission-only="'api-definition-u'"
+              icon="code:time-schedule"
+              ng-show="(!$ctrl.eventsSelected[0].isCurrentAPI && $ctrl.eventsSelected[0].event.id != $ctrl.events[0].id) || (!$ctrl.eventsSelected[0].isCurrentAPI && $ctrl.eventsTimeline[0].isCurrentAPI)"
+              ng-click="$ctrl.showRollbackAPIConfirm($event, $ctrl.eventSelectedPayload)"
+              >Rollback</gv-button
+            >
+            <gv-popover class="clipboard__popover" event="click" delay="750" .arrow="${false}">
+              <gv-button outlined class="api-events_copy-btn" icon="general:clipboard" ng-click="$ctrl.copyToClipboard($event)"
+                >Copy to clipboard</gv-button
+              >
+              <div slot="popover" class="clipboard__popover-content">
+                <gv-icon shape="code:check"></gv-icon>
+                <div>Definition copied</div>
+              </div>
+            </gv-popover>
+            <gv-button
+              ng-show="$ctrl.eventsTimeline.length > 1"
+              title="Click and select event from timeline to compare"
+              ng-attr-loading="{{$ctrl.eventToCompareRequired ? true : undefined}}"
+              ng-attr-outlined="{{$ctrl.mode !== $ctrl.modes.Diff ? true : undefined}}"
+              ng-attr-primary="{{$ctrl.mode === $ctrl.modes.Diff ? true : undefined}}"
+              icon="code:git#4"
+              ng-click="$ctrl.enableDiff()"
+              >Diff</gv-button
+            >
+            <gv-button
+              ng-show="$ctrl.events.length > 0 && $ctrl.eventsSelected[0].event.id != $ctrl.events[0].id"
+              icon="code:git#3"
+              ng-attr-outlined="{{$ctrl.mode !== $ctrl.modes.DiffWithMaster ? true : undefined}}"
+              ng-attr-primary="{{$ctrl.mode === $ctrl.modes.DiffWithMaster ? true : undefined}}"
+              outlined
+              ng-click="$ctrl.diffWithMaster()"
+              >Diff with published API</gv-button
+            >
+          </div>
+          <div class="api-event-content_actions-right">
+            <div ng-show="$ctrl.hasDiff()" class="api-event_diff-count">
+              <span class="api-event_diff-added">+ {{$ctrl.added}}</span>
+              <span class="api-event_diff-removed">- {{$ctrl.removed}}</span>
+            </div>
+            <gv-switch
+              ng-show="$ctrl.hasDesign()"
+              ng-on-gv-switch:input="$ctrl.toggleMode($event)"
+              ng-value="$ctrl.mode !== $ctrl.modes.Design"
+              label="Mode"
+              description="Design / Definition"
+            ></gv-switch>
+          </div>
+        </div>
+        <md-card-content class="api-event-content_content">
+          <pre ng-show="$ctrl.mode === $ctrl.modes.Payload" class="api-history-definition">
+{{$ctrl.eventSelectedPayloadDefinition | json}}</pre
+          >
+          <pre ng-show="$ctrl.hasDiff()" class="api-history-definition" gravitee-diff old-value="$ctrl.left" new-value="$ctrl.right"></pre>
+          <gv-policy-studio
+            class="api-event_policy-studio"
+            flows-title="API Flows"
+            readonly
+            has-properties
+            has-resources
+            has-plans
+            has-conditional-steps
+            ng-on-gv-policy-studio:fetch-documentation="$ctrl.fetchPolicyDocumentation($event)"
+            ng-on-gv-resources:fetch-documentation="$ctrl.fetchResourceDocumentation($event)"
+            ng-show="$ctrl.mode === $ctrl.modes.Design"
+          ></gv-policy-studio>
+        </md-card-content>
+      </md-card>
+    </div>
+  </div>
+</div>
+<gravitee-empty-state
+  ng-if="$ctrl.eventsTimeline.length == 0"
+  icon="history"
+  model="History"
+  message="Your API history will appear here"
+  sub-message="We will keep you informed of API changes"
+></gravitee-empty-state>

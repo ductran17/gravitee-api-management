@@ -1,0 +1,25 @@
+@use 'sass:map';
+@use '../../../../../../../node_modules/@angular/material/index' as mat;
+@use '../../../../../../../node_modules/@gravitee/ui-particles-angular/index' as gio;
+
+.title {
+  display: flex;
+  padding-bottom: 32px;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.field {
+  width: 100%;
+}
+
+.actions {
+  &__importInvalid {
+    background-color: mat.get-color-from-palette(gio.$mat-error-palette, default);
+    color: mat.get-color-from-palette(gio.$mat-error-palette, default-contrast);
+  }
+}

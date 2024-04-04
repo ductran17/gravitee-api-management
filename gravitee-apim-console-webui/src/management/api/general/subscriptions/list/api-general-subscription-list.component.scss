@@ -1,0 +1,82 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+@use '../../../../../scss/gio-layout' as gio-layout;
+
+$foreground: map.get(gio.$mat-theme, foreground);
+
+:host {
+  @include gio-layout.gio-responsive-content-container;
+}
+
+::ng-deep api-general-subscription-list {
+  .subscriptions__filters__field > .mat-form-field-wrapper {
+    margin-bottom: -1.25em;
+  }
+}
+
+.subscriptions {
+  &__header {
+    display: flex;
+    align-items: center;
+
+    &__buttons {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 16px;
+
+      & button {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  &__filters {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+
+    &__inputs {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      &__field {
+        flex: 1;
+        padding-bottom: 0px;
+      }
+    }
+  }
+
+  &__table {
+    width: 100%;
+    @include mat.elevation(3); // default elevation
+
+    &__name {
+      cursor: pointer;
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+
+    .mat-column-actions {
+      width: 0;
+    }
+
+    .mat-column-name {
+      width: 30%;
+    }
+
+    .loader {
+      gio-loader {
+        height: 50px;
+        width: 50px;
+        margin: 0 auto;
+      }
+    }
+  }
+}

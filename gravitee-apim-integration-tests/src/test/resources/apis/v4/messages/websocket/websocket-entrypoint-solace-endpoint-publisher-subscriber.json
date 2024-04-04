@@ -1,0 +1,69 @@
+{
+  "id": "my-api",
+  "name": "my-api",
+  "apiVersion": "1.0",
+  "definitionVersion": "4.0.0",
+  "type": "message",
+  "description": "api v4 using Websocket entrypoint",
+  "listeners": [
+    {
+      "type": "http",
+      "paths": [
+        {
+          "path": "/test"
+        }
+      ],
+      "entrypoints": [
+        {
+          "type": "websocket",
+          "configuration": {
+            "publisher": {
+              "enabled": true
+            },
+            "subscriber": {
+              "enabled": true
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "endpointGroups": [
+    {
+      "name": "default-group",
+      "type": "solace",
+      "endpoints": [
+        {
+          "name": "default",
+          "type": "solace",
+          "weight": 1,
+          "inheritConfiguration": false,
+          "configuration": {
+            "url": "solace-url",
+            "vpnName": "default"
+          },
+          "sharedConfigurationOverride": {
+            "consumer": {
+              "enabled": true,
+              "topics": ["test-topic"]
+            },
+            "producer": {
+              "enabled": true,
+              "topics": ["test-topic"]
+            },
+            "security": {
+              "auth" : {
+                "username" : "admin",
+                "password" : "admin"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "flows": [],
+  "analytics": {
+    "enabled": false
+  }
+}

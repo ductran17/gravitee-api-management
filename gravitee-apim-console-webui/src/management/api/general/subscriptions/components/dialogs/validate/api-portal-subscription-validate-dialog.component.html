@@ -1,0 +1,56 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<h2 matDialogTitle>Validate your subscription</h2>
+<form [formGroup]="form" (ngSubmit)="onClose()">
+  <mat-dialog-content>
+    <div class="validate-subscription__content">
+      <div class="validate-subscription__content__row">
+        <mat-form-field>
+          <mat-label>Validation period (optional)</mat-label>
+          <input
+            matInput
+            [owlDateTime]="dateTimeRange"
+            [owlDateTimeTrigger]="dateTimeRange"
+            [selectMode]="'range'"
+            [min]="minDate"
+            formControlName="dateTimeRange"
+          />
+          <mat-icon [owlDateTimeTrigger]="dateTimeRange" matSuffix svgIcon="gio:calendar"></mat-icon>
+          <owl-date-time #dateTimeRange></owl-date-time>
+          <mat-error *ngIf="form.get('dateTimeRange').hasError('owlDateTimeMin')">
+            Date Time value must be after {{ minDate | date : 'medium' }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="validate-subscription__content__row">
+        <mat-form-field appearance="outline" class="validate-subscription__content__message">
+          <input id="subscription-message" type="text" matInput formControlName="message" maxlength="50" />
+          <mat-label>Message (optional)</mat-label>
+        </mat-form-field>
+      </div>
+      <div class="validate-subscription__content__row" *ngIf="data.canUseCustomApiKey && !data.sharedApiKeyMode">
+        <div class="mat-body-1">This plan allows custom API Keys. You can provide it here.</div>
+        <api-key-validation formControlName="apiKey" [applicationId]="data.applicationId" [apiId]="data.apiId"></api-key-validation>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="actions">
+    <button mat-flat-button type="button" [mat-dialog-close]="undefined">Cancel</button>
+    <button color="primary" type="submit" mat-raised-button aria-label="Validate subscription" [disabled]="form.invalid">Validate</button>
+  </mat-dialog-actions>
+</form>

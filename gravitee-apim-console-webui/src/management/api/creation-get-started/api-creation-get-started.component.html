@@ -1,0 +1,110 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<mat-card>
+  <div class="api-creation-get-started__header">
+    <h1 class="api-creation-get-started__header__title mat-title">Get started building your API</h1>
+    <span class="api-creation-get-started__header__description mat-body"
+      >Let’s create and configure your API in the easiest possible way</span
+    >
+  </div>
+
+  <div class="api-creation-get-started__row">
+    <div class="api-creation-get-started__row__card api-v4-creation-card">
+      <div mat-card-image class="api-v4-creation-card__img">
+        <img [src]="'assets/api-create-wizard.png'" alt="API Create wizard logo" />
+      </div>
+
+      <div class="api-creation-get-started__row__card__header">
+        <div>
+          <div class="api-creation-get-started__row__card__header__title mat-subheading-2">Create a V4 API from scratch</div>
+          <div class="gio-badge-neutral gio-caption-2">V4 API definition</div>
+        </div>
+
+        <div class="api-creation-get-started__row__card__action">
+          <button mat-flat-button color="primary" (click)="goToApiv4CreationWizard()" data-testid="api_create_v4_button">
+            Create <mat-icon svgIcon="gio:right-circle"></mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="mat-body">Support for event brokers, asynchronous APIs, and Webhook subscriptions</div>
+      <div class="mat-body coming-soon-message">
+        The V4 experience is currently optimized for exposing asynchronous services. Features in V2 APIs like analytics, documentation pages
+        and debug mode are coming soon.
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading" class="api-creation-get-started__row__card api-designer-card">
+      <div mat-card-image class="api-designer-card__img">
+        <img [src]="'assets/api-create-design-link.png'" alt="Api Designer logo" />
+      </div>
+
+      <div class="api-creation-get-started__row__card__header">
+        <div>
+          <div class="api-creation-get-started__row__card__header__title mat-subheading-2">Build with API Designer</div>
+          <div class="gio-badge-neutral gio-caption-2">V2 API definition</div>
+          <div class="gio-badge-neutral gio-caption-2">V4 API definition - Coming soon</div>
+        </div>
+
+        <div class="api-creation-get-started__row__card__action">
+          <a [href]="cockpitLink" target="_blank" rel="noopener noreferrer" mat-stroked-button
+            >Try API Designer <mat-icon svgIcon="gio:external-link"></mat-icon
+          ></a>
+        </div>
+      </div>
+
+      <div class="mat-body">
+        Build faster with a design-first approach that reduces time spent translating requirements into API definitions.
+      </div>
+    </div>
+  </div>
+
+  <div class="api-creation-get-started__row">
+    <div class="api-creation-get-started__row__card api-v2-creation-card">
+      <div class="api-creation-get-started__row__card__header">
+        <div>
+          <div class="api-creation-get-started__row__card__header__title mat-subheading-2">Create a V2 API from scratch</div>
+          <div class="gio-badge-neutral gio-caption-2">V2 API definition</div>
+        </div>
+
+        <div class="api-creation-get-started__row__card__action">
+          <button mat-stroked-button (click)="goToApiV2CreationWizard()">Create <mat-icon svgIcon="gio:right-circle"></mat-icon></button>
+        </div>
+      </div>
+
+      <div class="mat-body">Use API definition from previous versions of Gravitee APIM.</div>
+    </div>
+
+    <div class="api-creation-get-started__row__card import-existing-api-card">
+      <div class="api-creation-get-started__row__card__header">
+        <div>
+          <div class="api-creation-get-started__row__card__header__title mat-subheading-2">Import an API definition</div>
+          <div class="gio-badge-neutral gio-caption-2">AsyncAPI definition - coming soon</div>
+          <div class="gio-badge-neutral gio-caption-2">V2 API Definition</div>
+          <div class="gio-badge-neutral gio-caption-2">V4 API Definition</div>
+        </div>
+
+        <div class="api-creation-get-started__row__card__action">
+          <button mat-stroked-button (click)="goToApiImport()">Import <mat-icon svgIcon="gio:right-circle"></mat-icon></button>
+        </div>
+      </div>
+
+      <div class="mat-body">Import an existing API definition, Swagger/OpenAPI specifications or WSDL.</div>
+    </div>
+  </div>
+</mat-card>

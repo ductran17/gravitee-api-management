@@ -1,0 +1,52 @@
+.documentation-pages-list {
+  &__container {
+    display: flex;
+    flex-flow: column;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  &__table {
+    &__name {
+      display: flex;
+      max-width: 450px;
+      cursor: pointer;
+      gap: 8px;
+      align-items: center;
+
+      p {
+        margin-bottom: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      mat-icon {
+        flex: 0 0 24px;
+      }
+    }
+
+    &__status {
+      flex: 1 1 100%;
+      span:first-child {
+        margin-left: 0;
+      }
+    }
+
+    &__actions {
+      display: flex;
+      gap: 8px;
+    }
+    .mat-column-actions {
+      max-width: 232px;
+    }
+  }
+}
+
+.empty-icon-button {
+  min-width: 40px;
+}
+
+.no-pointer {
+  cursor: initial;
+}

@@ -1,0 +1,70 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<div class="step-4-security-1-plans-list__header">
+  <div class="step-4-security-1-plans-list__header__title">Your API plans</div>
+
+  <div
+    [matTooltip]="'No compatible plan type enabled for entrypoints. This is configured under Settings > Portal > Settings > Console.'"
+    [matTooltipDisabled]="planMenuItems?.length > 0"
+  >
+    <button mat-stroked-button type="button" aria-label="Add new plan" [matMenuTriggerFor]="menu" [disabled]="planMenuItems?.length === 0">
+      <mat-icon svgIcon="gio:plus"></mat-icon>Add plan
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngFor="let planMenuItem of planMenuItems" (click)="addPlan(planMenuItem)">{{ planMenuItem.name }}</button>
+    </mat-menu>
+  </div>
+</div>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <table mat-table class="step-4-security-1-plans-list__table" [dataSource]="plans" aria-label="security plans">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="mode">
+      <th mat-header-cell *matHeaderCellDef>Mode</th>
+      <td mat-cell *matCellDef="let element">{{ element.mode }}</td>
+    </ng-container>
+    <ng-container matColumnDef="security">
+      <th mat-header-cell *matHeaderCellDef>Security</th>
+      <td mat-cell *matCellDef="let element">{{ element.security?.type }}</td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div class="step-4-security-1-plans-list__table__actions">
+          <button type="button" mat-icon-button aria-label="Edit plan" matTooltip="Edit plan" (click)="editPlan(element)">
+            <mat-icon svgIcon="gio:edit-pencil"></mat-icon>
+          </button>
+          <button type="button" mat-icon-button aria-label="Remove plan" matTooltip="Remove plan" (click)="removePlan(element)">
+            <mat-icon svgIcon="gio:cancel"></mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <div class="api-creation-v4__step__footer">
+    <button mat-stroked-button type="button" (click)="goBack()">Previous</button>
+    <button mat-flat-button data-testid="validate_plans_button" color="primary" type="submit" [disabled]="form.invalid">
+      Validate my plans
+    </button>
+  </div>
+</form>

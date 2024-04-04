@@ -1,0 +1,74 @@
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+@use '../../../scss/gio-layout' as gio-layout;
+
+:host {
+  @include gio-layout.gio-full-width-content-container;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  :host-context(.breadcrumb) {
+    height: calc(100% - 16px /* Remove margin-top*/);
+    margin-top: 16px;
+    border-top: 1px solid mat.get-color-from-palette(gio.$mat-dove-palette, darker20);
+
+    .gio-policy-studio-layout {
+      &__tab-content {
+        --gv-policy-studio--h: calc(100vh - 118px - 62px);
+      }
+    }
+  }
+
+  :host-context(.hasApiBanner) {
+    .gio-policy-studio-layout {
+      &__tab-content {
+        --gv-policy-studio--h: calc(100vh - 118px - 82px);
+      }
+    }
+  }
+
+  :host-context(.hasApiBanner.breadcrumb) {
+    .gio-policy-studio-layout {
+      &__tab-content {
+        --gv-policy-studio--h: calc(100vh - 118px - 62px - 82px);
+      }
+    }
+  }
+
+  .gio-policy-studio-layout {
+    &__header {
+      position: relative;
+      display: flex;
+      background-color: mat.get-color-from-palette(gio.$mat-basic-palette, white);
+
+      &__nav {
+        flex: 1;
+
+        &__icon {
+          margin-left: 5px;
+          height: 20px;
+          width: 20px;
+        }
+      }
+    }
+
+    &__tab-content {
+      background-color: white;
+      flex: 1 1 auto;
+      --gv-policy-studio--h: calc(100vh - 118px);
+
+      &.save-bar-opened {
+        --gv-policy-studio--pb: 84px;
+      }
+    }
+
+    &__save-bar {
+      position: absolute;
+      bottom: 25px;
+      width: 50%;
+      margin: 0 25%;
+    }
+  }
+}

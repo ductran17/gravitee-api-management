@@ -1,0 +1,19 @@
+{
+    "$schema":"http://json-schema.org/draft-07/schema#",
+    "type":"object",
+    "definitions":{
+        "target":{
+            "title":"Target url",
+            "description":"The target url to use to contact the backend",
+            "type":"string"
+        }
+    },
+    "properties":{
+        "target":{
+            "$ref":"#/definitions/target"
+        }
+    },
+    "required":[
+        "target"
+    ]
+}

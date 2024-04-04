@@ -1,0 +1,211 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<ng-container *ngIf="httpConfigFormGroup" [formGroup]="httpConfigFormGroup">
+  <div class="httpClientOptions" formGroupName="httpClientOptions">
+    <h3>HTTP Options</h3>
+
+    <mat-form-field class="endpointHttpConfig__formField">
+      <mat-label>HTTP Protocol version</mat-label>
+      <mat-select formControlName="version">
+        <mat-option *ngFor="let version of httpVersions" [value]="version.value">{{ version.label }}</mat-option>
+      </mat-select>
+      <mat-hint>HTTP protocol version to use</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="endpointHttpConfig__formField">
+      <mat-label>Connect timeout</mat-label>
+      <input matInput formControlName="connectTimeout" type="number" />
+      <mat-hint>Maximum time to connect to the remote host. (in milliseconds)</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="endpointHttpConfig__formField">
+      <mat-label>Read timeout</mat-label>
+      <input matInput formControlName="readTimeout" type="number" />
+      <mat-hint>Maximum time to complete the request, including response. (in milliseconds)</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="endpointHttpConfig__formField">
+      <mat-label>Idle timeout</mat-label>
+      <input matInput formControlName="idleTimeout" type="number" />
+      <mat-hint>Maximum time a connection will timeout and be closed if no data is received within the timeout. (in milliseconds)</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="endpointHttpConfig__formField">
+      <mat-label>Max Concurrent Connections</mat-label>
+      <input matInput formControlName="maxConcurrentConnections" type="number" />
+      <mat-hint>Maximum pool size for connections.</mat-hint>
+    </mat-form-field>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Allow h2c Clear Text Upgrade</gio-form-label>
+      If enabled, an h2c connection is established using an HTTP/1.1 Upgrade request. If disabled, h2c connection is established directly
+      (with prior knowledge)
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="clearTextUpgrade"
+        aria-label="Allow h2c Clear Text Upgrade"
+        name="clearTextUpgrade"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Enable keep-alive</gio-form-label>
+      Use an HTTP persistent connection to send and receive multiple HTTP requests / responses.
+      <mat-slide-toggle gioFormSlideToggle formControlName="keepAlive" aria-label="Enable keep-alive" name="keepAlive"></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Enable HTTP pipelining</gio-form-label>
+      When pipe-lining is enabled requests will be written to connections without waiting for previous responses to return.
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="pipelining"
+        aria-label="Enable HTTP pipelining"
+        name="pipelining"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Follow HTTP redirects</gio-form-label>
+      When the client receives a status code in the range 3xx, it follows the redirection provided by the Location response header
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="followRedirects"
+        aria-label="Follow HTTP redirects"
+        name="followRedirects"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Enable compression (gzip, deflate)</gio-form-label>
+      The gateway can let the remote http server know that it supports compression. In case the remote http server returns a compressed
+      response, the gateway will decompress it. Leave that option off if you don't want compression between the gateway and the remote
+      server.
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="useCompression"
+        aria-label="Enable compression (gzip, deflate)"
+        name="useCompression"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Propagate client Accept-Encoding header (no decompression if any)</gio-form-label>
+      The gateway will propagate the Accept-Encoding header's value specified by the client's request to the backend (if any). The gateway
+      will <b>NEVER attempt to decompress the content</b> if the backend response is compressed (gzip, deflate). It is then not possible to
+      apply transformation policy if the body is compressed. Also, body will appear compressed if logging is enabled for the API. DO NOT
+      activate this option if you plan to play with body responses.
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="propagateClientAcceptEncoding"
+        aria-label="Propagate client Accept-Encoding header (no decompression if any)"
+        name="propagateClientAcceptEncoding"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+  </div>
+
+  <div class="headers">
+    <h3>HTTP Headers</h3>
+    <gio-form-headers [headerFieldMapper]="{ keyName: 'name', valueName: 'value' }" formControlName="headers"></gio-form-headers>
+  </div>
+
+  <div class="proxyOptions" formGroupName="httpProxy">
+    <h3>Proxy Options</h3>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Use proxy</gio-form-label>
+      Use proxy for client connections
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="enabled"
+        aria-label="Use proxy for client connections"
+        name="httpProxyEnabled"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Use system proxy</gio-form-label>
+      Use proxy configured at system level
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="useSystemProxy"
+        aria-label="Use proxy configured at system level"
+        name="useSystemProxy"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <mat-form-field class="endpointHttpConfig__formField">
+      <mat-label>Proxy Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let type of proxyTypes" [value]="type.value">{{ type.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="endpointHttpConfig__line">
+      <mat-form-field class="endpointHttpConfig__line__formField">
+        <mat-label>Proxy host</mat-label>
+        <input matInput formControlName="host" />
+      </mat-form-field>
+
+      <mat-form-field class="endpointHttpConfig__line__formField">
+        <mat-label>Proxy port</mat-label>
+        <input matInput formControlName="port" type="number" />
+      </mat-form-field>
+    </div>
+
+    <div class="endpointHttpConfig__line">
+      <mat-form-field class="endpointHttpConfig__line__formField">
+        <mat-label>Proxy username</mat-label>
+        <input matInput formControlName="username" />
+      </mat-form-field>
+
+      <mat-form-field class="endpointHttpConfig__line__formField">
+        <mat-label>Proxy password</mat-label>
+        <input matInput formControlName="password" type="password" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="sslOptions" formGroupName="httpClientSslOptions">
+    <h3>SSL Options</h3>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Verify Host</gio-form-label>
+      Use to enable host name verification
+      <mat-slide-toggle
+        gioFormSlideToggle
+        formControlName="hostnameVerifier"
+        aria-label="Verify Host"
+        name="hostnameVerifier"
+      ></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <gio-form-slide-toggle class="endpointHttpConfig__formField">
+      <gio-form-label>Trust all</gio-form-label>
+      Use this with caution (if over Internet). The gateway must trust any origin certificates. The connection will still be encrypted but
+      this mode is vulnerable to 'man in the middle' attacks.
+      <mat-slide-toggle gioFormSlideToggle formControlName="trustAll" aria-label="Trust all" name="trustAll"></mat-slide-toggle>
+    </gio-form-slide-toggle>
+
+    <ssl-truststore-form
+      *ngIf="httpConfigFormGroup.get('httpClientSslOptions').get('trustAll').value !== true"
+      formControlName="trustStore"
+    ></ssl-truststore-form>
+    <ssl-keystore-form formControlName="keyStore"></ssl-keystore-form>
+  </div>
+</ng-container>

@@ -1,0 +1,85 @@
+@use 'sass:map';
+@use 'src/scss/gio-layout' as gio-layout;
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+:host {
+  @include gio-layout.gio-responsive-content-container;
+}
+
+.back-button {
+  margin-bottom: 24px;
+  a {
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      height: 16px;
+      width: 16px;
+    }
+  }
+}
+
+.endpoint-card {
+  margin-bottom: 24px;
+
+  &__header {
+    margin-bottom: 16px;
+
+    &__group-name {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 16px;
+
+      .mat-h3 {
+        margin: auto 0;
+      }
+
+      .gio-badge-primary {
+        margin: auto 8px;
+      }
+
+      .mat-h2 {
+        margin: auto 0;
+      }
+
+      mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  &__form {
+    &__name {
+      width: 100%;
+      padding-bottom: 0;
+    }
+
+    &__config,
+    &__shared-config {
+      margin-bottom: 16px;
+    }
+
+    &__lb {
+      margin-bottom: 16px;
+      border: 1px solid mat.get-color-from-palette(gio.$mat-dove-palette, 'darker20');
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    &__weight {
+      width: 100%;
+      margin-top: 24px;
+    }
+
+    &__tab-content {
+      padding: 24px 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

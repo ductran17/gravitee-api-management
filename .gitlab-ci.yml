@@ -1,0 +1,67 @@
+
+# image: gitlab/dind # sử dụng môi trường gitlab
+# services:
+#   - docker:dind # sử dụng docker để run các thành phần bên dưới
+
+image: docker:24.0.7
+services:
+  - docker:24.0.7-dind # sử dụng docker để run các thành phần bên dưới
+
+variables:
+  IMAGE_NAME: ductran17/gravitee-api-management # iamge mà các bạn vừa tạo, nhớ thay tên username và tên image bạn vừa tạo ở trên
+stages: # định nghĩa các bước, ở đây minhd có 3 bước tương ứng như bên dưới
+  - build-java
+  # - test-java
+  - docker
+  - deploy
+
+maven-build: # đây là bước build java
+  image: maven:3.8.1-openjdk-17-slim
+  stage: build-java
+  script:
+    - mvn clean install -T 2C -DskipTests=true
+
+docker-build:
+  stage: docker
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+deploy:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  only:
+    - main # chi deploy khi update code vao nhanh main
+  before_script:
+    - apk update && apk add openssh-client bash
+  script:
+    # chạy ssh-agent tương ứng với Gitlab Runner hiện tại
+    - eval $(ssh-agent -s)
+
+    # thêm nội dung của biến SSH_PRIVATE_KEY vào agent store
+    - bash -c 'ssh-add <(echo "$SSH_PRIVATE_KEY")'
+    
+    # tạo folder ~/.ssh
+    - mkdir -p ~/.ssh
+    
+    # Scan lấy SSH Host key cho địa chỉ IP server
+    # Được kết quả bao nhiêu thì thêm vào file known_hosts
+    - ssh-keyscan -p $SSH_SERVER_PORT -H $SSH_SERVER_IP >> ~/.ssh/known_hosts
+    
+    # Sửa lại quyền của file known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    
+    # Thực hiện SSH vào server, login vào Registry, chuyển tới folder project
+    # Down project, pull image về, up project và xoá đi image cũ
+    - >
+      ssh $SSH_USER@$SSH_SERVER_IP -p $SSH_SERVER_PORT
+      "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
+      cd ${PATH_TO_PROJECT};
+      docker-compose down;
+      docker pull ${CI_REGISTRY_IMAGE}:latest;
+      docker-compose up -d;
+      docker image prune -f;"

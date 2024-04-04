@@ -1,0 +1,213 @@
+= Contributing to Gravitee.io
+
+You think Gravitee.io is awesome, and you'd like to contribute?
+Here are some guidelines that should help you get started.
+
+== Bootstrap Your Dev Environment
+
+// tag::dev-guide[]
+=== Overview
+
+This section explains how to set up your environment to start contributing to APIM.
+
+=== Prerequisites
+
+You will need the following tools installed on your computer:
+
+* Java (JDK >= 17)
+* Maven
+* Docker
+* NPM (preferably with NVM)
+
+=== Get the project and prepare your workspace
+
+Clone the project in your workspace::
+[source, bash]
+----
+git clone https://github.com/gravitee-io/gravitee-api-management
+----
+
+Build APIM Management API and Gateway::
+
+The default build command is:
+[source, bash]
+----
+mvn clean install -T 2C
+----
+
+If you want to skip license validation, prettier checks, and tests, you can use:
+[source, bash]
+----
+mvn clean install -T 2C -DskipTests=true -Dskip.validation=true
+----
+
+NOTE: This command will build create a `distribution` folder in the `target` folder of each module.
+These folders contain a full distribution of Management API and Gateway, with default plugins.
+These `distribution` folder should be used as the `gravitee.home` environment variable
+
+To get a bundle with all the plugins (default, enterprise etc) you need to build the project with the following profile activated: `bundle-default,bundle-dev`.
+For instance:
+[source, bash]
+----
+mvn clean install -T 2C -P bundle-default,bundle-dev
+----
+
+Prepare APIM Console UI and Portal UI::
+
+First, be sure to have the correct version of npm installed, there are .nvmrc files in the UI projects.
+If you've `nvm` installed, you can use `nvm use` to switch to the appropriate version of npm.
+
+Then run `npm install` in the following directories:
+ - `gravitee-api-management/gravitee-apim-console-webui`
+ - `gravitee-api-management/gravitee-apim-portal-webui`
+
+=== Run Prerequisites
+
+Before starting APIM Management API and Gateway, you need to start MongoDB and ElasticSearch. +
+You can, for instance, use docker.
+
+MongoDB::
+[source, bash]
+----
+docker run -p 27017:27017 --name local-mongo -d mongo:7
+----
+
+ElasticSearch::
+[source, bash]
+----
+docker run -d --name local-es8 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+----
+
+=== Run Configuration
+
+==== APIM Gateway (gravitee-apim-gateway)
+
+IntelliJ configuration::
+The project includes by default the configuration `Gateway - MongoDB` to run the Gateway.
+
+CLI Version::
+Run `./gravitee` from the `${GRAVITEE_HOME}/bin` directory.
+
+NOTE:  `${GRAVITEE_HOME}` refers to the `target/distribution` folder created before.
+
+
+
+==== APIM Management API (gravitee-apim-rest-api)
+
+IntelliJ configuration::
+The project includes by default the configuration `Rest API - MongoDB` to run the Rest API.
+
+CLI Version::
+Run `./gravitee` from the `${GRAVITEE_HOME}/bin` directory.
+
+NOTE:  `${GRAVITEE_HOME}` refers to the `target/distribution` folder created before.
+
+==== APIM Console (gravitee-apim-console-webui)
+
+IntelliJ configuration::
+
+Create a new Run configuration in IntelliJ:
+
+. Click *Run -> Edit configurations -> ✚ -> npm*.
+. Name it as required.
+. Choose *package.json: gravitee-api-management/gravitee-apim-console-webui/package.json*.
+. Select *Command: run*.
+. Select *Script: serve*.
+
+TIP: To run `npm install` from IntelliJ, you can duplicate this configuration and choose *Command > Install*.
+
+CLI Version::
+Run `npm run serve` from the `gravitee-api-management/gravitee-apim-console-webui` directory to start the UI.
+
+
+==== APIM Portal (gravitee-apim-portal-webui)
+
+
+IntelliJ Configuration::
+Create a new Run configuration in IntelliJ:
+
+. Click *Run -> Edit configurations -> ✚ -> npm*.
+. Name it as required.
+. Choose *package.json: gravitee-api-management/gravitee-apim-portal-webui/package.json*.
+. Select *Command: run*.
+. Select *Script: serve*.
+
+TIP: To run `npm install` from IntelliJ, you can duplicate this configuration and choose *Command > Install*.
+
+CLI Version::
+Run `npm run serve` from the `gravitee-api-management/gravitee-apim-portal-webui` directory to start the UI.
+
+// end::dev-guide[]
+
+== Working with GitHub issues
+
+We use GitHub issues to track bugs and enhancements. Found a bug in the source code? Want to propose new features or enhancements?
+You can help us by submitting an issue in our https://github.com/gravitee-io/issues/issues[repository].
+Before submitting your issue, please search the https://github.com/gravitee-io/issues/issues[issues archive] to see if your question has already been answered.
+
+Providing the following information will help us deal quickly with your issue:
+
+* **Overview of the issue** : describe the issue and why this is a bug for you. 
+* **Gravitee.io version(s)** : possible regression ?
+* **Browsers and Operating System** : Linux/Windows/Docker ? Browser version for the UI, etc ...
+* **You have stack trace, screenshots, logs ?** add these to the issue's description.
+
+== Submitting changes
+
+Have you submitted an issue to the project and know how to fix it? You can contribute to the project by https://guides.github.com/activities/forking/[forking the repository] and https://guides.github.com/activities/forking/#making-a-pull-request[submitting your pull requests].
+
+Before you submit your pull request consider the following guidelines:
+
+* Make your changes in a new git branch:
+
+[source,shell]
+----
+git checkout -b issue/<issue-id>-my-fix-branch master
+----
+
+Note : `issue-id` reference the id generated by GitHub.
+
+* Create your patch, **including appropriate test cases**.
+* Update the documentation if you create new features or think the documentation needs to be updated/completed.
+* Commit your changes using a descriptive https://conventionalcommits.org/[Conventional Commit Message].
+
+[source,shell]
+----
+ git commit -a -m "feat: this is an example"
+----
+
+* Build your changes locally to **ensure all the tests pass**:
+
+[source,shell]
+----
+mvn clean install
+----
+
+* Push your branch to GitHub:
+
+[source,shell]
+----
+git push origin issue/<issue-id>-my-fix-branch
+----
+
+* In GitHub, send a pull request to `<gravitee-io/gravitee-api-management>:master`.
+
+* If we suggest changes then:
+  ** Make the required updates.
+  ** Re-run the test suite to ensure tests are still passing.
+  ** Commit your changes to your branch (e.g. `issue/<issue-id>-my-fix-branch`).
+  ** Push the changes to your GitHub repository (this will update your Pull Request).
+
+If the PR gets too outdated we may ask you to rebase and force push to update the PR:
+
+[source,shell]
+----
+git rebase master
+git push origin issue/<issue-id>-my-fix-branch -f
+----
+
+That's it! You've just contributed to the project, and we really appreciate it!
+
+== Further Information
+
+You can find more detailed information about contributing in the https://guides.github.com/activities/contributing-to-open-source/[Github guides].

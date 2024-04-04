@@ -1,0 +1,86 @@
+<!--
+
+    Copyright (C) 2015 The Gravitee team (http://gravitee.io)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<div class="home-overview">
+  <div class="home-overview__time-selector">
+    <gio-quick-time-range [formControl]="timeRangeControl" (onRefreshClicked)="fetchAnalyticsRequest()"></gio-quick-time-range>
+  </div>
+  <div class="home-overview__row">
+    <mat-card class="home-overview__card flex">
+      <div class="mat-subheading-1">Quick Summary</div>
+      <div *ngIf="apiNb !== undefined && applicationNb !== undefined; else loader" class="home-overview__card__list">
+        <div class="home-overview__card__list__row">
+          <span class="home-overview__card__list__row__value">{{ apiNb }}</span>
+          <span class="home-overview__card__list__row__label">Total APIs</span>
+        </div>
+        <div class="home-overview__card__list__row">
+          <span class="home-overview__card__list__row__value">{{ applicationNb }}</span>
+          <span class="home-overview__card__list__row__label">Total Applications</span>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="home-overview__card">
+      <div class="mat-subheading-1">API Lifecycle State</div>
+      <ng-container *ngIf="apiLifecycleState; else loader">
+        <gio-api-lifecycle-state [data]="apiLifecycleState"></gio-api-lifecycle-state>
+      </ng-container>
+    </mat-card>
+
+    <mat-card class="home-overview__card">
+      <div class="mat-subheading-1">API State</div>
+      <ng-container *ngIf="apiState; else loader">
+        <gio-api-state [data]="apiState"></gio-api-state>
+      </ng-container>
+    </mat-card>
+  </div>
+  <div class="home-overview__row">
+    <mat-card class="home-overview__card">
+      <div class="mat-subheading-1">API Response Status</div>
+
+      <ng-container *ngIf="apiResponseStatus; else loader">
+        <gio-api-response-status [data]="apiResponseStatus"></gio-api-response-status>
+      </ng-container>
+    </mat-card>
+
+    <mat-card class="home-overview__card">
+      <div class="mat-subheading-1">
+        Top APIs
+        <span class="mat-caption">(Ordered by API calls)</span>
+      </div>
+      <ng-container *ngIf="topApis; else loader">
+        <gio-top-apis-table [data]="topApis"></gio-top-apis-table>
+      </ng-container>
+    </mat-card>
+
+    <mat-card class="home-overview__card flex">
+      <ng-container *ngIf="requestStats; else loader">
+        <gio-request-stats [data]="requestStats"></gio-request-stats>
+      </ng-container>
+    </mat-card>
+  </div>
+</div>
+<div class="home-api-events">
+  <h2>API Events</h2>
+  <ng-container *ngIf="timeRangeParams; else loader">
+    <gio-api-events-table [timeRangeParams]="timeRangeParams"></gio-api-events-table>
+  </ng-container>
+</div>
+
+<ng-template #loader
+  ><div class="loader"><gio-loader></gio-loader></div
+></ng-template>

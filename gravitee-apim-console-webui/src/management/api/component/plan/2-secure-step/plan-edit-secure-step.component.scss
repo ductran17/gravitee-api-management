@@ -1,0 +1,13 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+:host {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.securityConfigSchema-form {
+  padding-bottom: 24px;
+}

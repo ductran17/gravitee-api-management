@@ -1,0 +1,113 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+$typography: map.get(gio.$mat-theme, typography);
+
+.gio-form-listeners {
+  &__table {
+    border-radius: 4px;
+    border-collapse: inherit;
+    width: 100%;
+
+    td {
+      border-top: none;
+    }
+
+    tr:last-child td:first-child {
+      border-radius: 0 0 0 4px;
+    }
+
+    tr:last-child td:last-child {
+      border-radius: 0 0 4px 0;
+    }
+
+    th:first-child {
+      border-radius: 4px 0 0 0;
+    }
+
+    th:last-child {
+      border-radius: 0 4px 0 0;
+    }
+
+    &__title {
+      text-transform: none;
+      display: flex;
+      align-items: center;
+      @include mat.typography-level($typography, 'body-2');
+
+      &__icon {
+        color: mat.get-color-from-palette(gio.$mat-dove-palette, 'darker40');
+        margin-left: 4px;
+        height: 14px;
+        width: 14px;
+      }
+    }
+
+    &__subtitle {
+      color: mat.get-color-from-palette(gio.$mat-dove-palette, 'darker40');
+      text-transform: none;
+      @include mat.typography-level($typography, 'caption');
+    }
+
+    &__field {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      padding-bottom: 0;
+    }
+
+    &__field:focus-within {
+      z-index: 100;
+      height: auto;
+      background-color: mat.get-color-from-palette(gio.$mat-basic-palette, white);
+
+      * {
+        max-height: none;
+      }
+    }
+
+    &__row__td {
+      &:has(.gio-form-listeners__table__field) {
+        padding: 0 8px 8px 8px;
+      }
+
+      &__button__hide {
+        visibility: hidden;
+      }
+    }
+
+    &__row__td:last-child,
+    &__row__th:last-child {
+      border-left: none;
+      width: 40px;
+    }
+
+    &__row__td:nth-last-child(2),
+    &__row__th:nth-last-child(2) {
+      border-right: none;
+    }
+  }
+
+  &__add-button {
+    margin-top: 8px;
+  }
+}
+
+::ng-deep {
+  .gio-form-listeners__table {
+    .mat-form-field-flex {
+      padding-top: 0 !important;
+    }
+
+    .mat-form-field.mat-form-field-appearance-standard:not(::ng-deep :has(mat-hint), ::ng-deep :has(mat-error)) {
+      padding-bottom: 0;
+
+      .mat-form-field-wrapper {
+        // stylelint-disable-next-line number-max-precision
+        margin-bottom: -1.34375em;
+      }
+    }
+  }
+}

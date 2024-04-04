@@ -1,0 +1,19 @@
+@use 'node_modules/@angular/material/index' as mat;
+@use 'node_modules/@gravitee/ui-particles-angular/index' as gio;
+
+.gio-form-listeners__table {
+  tr th:nth-last-child(2) {
+    display: table-cell;
+    width: 220px;
+  }
+
+  &__field {
+    &__host {
+      display: inline-block;
+      max-width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}

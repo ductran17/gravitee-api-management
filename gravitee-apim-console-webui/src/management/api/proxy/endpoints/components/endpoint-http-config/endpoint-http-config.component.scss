@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+@use '@gravitee/ui-particles-angular' as gio;
+
+.endpointHttpConfig__formField {
+  width: 100%;
+}
+
+.httpClientOptions,
+.headers {
+  padding-bottom: 24px;
+}
+
+.endpointHttpConfig__line {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+
+  &__formField {
+    flex: 1 1 auto;
+  }
+}
